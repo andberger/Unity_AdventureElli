@@ -3,31 +3,29 @@ using System.Collections;
 
 public class HeroMovement : MonoBehaviour {
 	
-	public float speed = 9.5f;
-	public float climbSpeed = 0.5f;
-	public float jumpHeight = 10f;
-	public bool mayJump = false;
-	public bool onWall = false;
-	
-	Vector2 movement;
-	Rigidbody playerRigidbody;
+	public float speed = 10f;
+
+	private Rigidbody2D playerRigidbody;
+
+	private Vector2 movement;	
+
 	// Use this for initialization
-	void Awake () {
-		playerRigidbody = GetComponent<Rigidbody>();
+	void Start () {
+		playerRigidbody = GetComponent<Rigidbody2D>();
 	}
 	
 	// Update is called once per frame
-	void FixedUpdate () {
+	void Update () {
 		float h = Input.GetAxisRaw("Horizontal");
-		Move(h);
+		Move (h);
+
+		if(Input.GetKeyDown(KeyCode.Space)){
+			playerRigidbody.velocity = new Vector2(0f, 30f);
+		}
 	}
 	
 	void Move(float h){
-		movement.Set(h,0f);
-		movement = movement.normalized * speed* Time.deltaTime;
-
-
-		playerRigidbody.MovePosition (new Vector2(transform.position.x, transform.position.y) + movement);
+		playerRigidbody.velocity = new Vector2(h * speed,playerRigidbody.velocity.y);
 	}
 
 }
