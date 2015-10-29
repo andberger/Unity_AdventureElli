@@ -3,7 +3,7 @@ using System.Collections;
 
 public class MoveCam : MonoBehaviour {
 
-
+	public Transform hero;
 
 	// Use this for initialization
 	void Start () {
@@ -12,9 +12,6 @@ public class MoveCam : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		float xAxisValue = Input.GetAxis("Horizontal");
-		float yAxisValue = Input.GetAxis("Vertical");
-		
-		Camera.main.transform.Translate(new Vector3(xAxisValue/3, yAxisValue/3, 0.0f));
+		Camera.main.transform.position = new Vector3(hero.position.x, hero.position.y, Camera.main.transform.position.z);
 	}
 }
