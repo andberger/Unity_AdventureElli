@@ -10,7 +10,7 @@ public class HeroMovement : MonoBehaviour {
 	public bool holdingKey = false;
 	public bool holdingFlippers = false;
 	public bool mayMove = true;
-
+	
 	public GameObject key;
 	public GameObject Flippers;
 	private Rigidbody2D heroRigidbody;
@@ -26,16 +26,18 @@ public class HeroMovement : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+		//Move
 		float h = Input.GetAxisRaw("Horizontal");
 		if(mayMove){
 			Move (h);
 		}
-
-		if(!isJumping && Input.GetKeyDown(KeyCode.Space) && !inWater){
+		//Jump
+		if(!isJumping && Input.GetKeyDown(KeyCode.Space) && !inWater && mayMove){
 			heroRigidbody.velocity = new Vector2(0f, 30f);
 			isJumping = true;
 		}
 
+		//Climb and swim
 		float v = Input.GetAxisRaw("Vertical");
 		if(climbStairs || inWater){
 			ClimbStairs(v);
@@ -77,7 +79,6 @@ public class HeroMovement : MonoBehaviour {
 		if(col.gameObject.CompareTag("Blockage") && holdingKey){
 			col.gameObject.SetActive(false);
 		}
-
 	}
 
 
