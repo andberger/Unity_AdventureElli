@@ -8,26 +8,29 @@ public class HeroMovement : MonoBehaviour {
 	public bool climbStairs = false;
 	public bool inWater = false;
 	public bool holdingKey = false;
+	public bool mayMove = true;
 
 	public GameObject key;
-	private Rigidbody2D playerRigidbody;
-	private Transform playerTransform;
+	private Rigidbody2D heroRigidbody;
+	private Transform heroTransform;
 
 	private Vector2 movement;	
 
 	// Use this for initialization
 	void Start () {
-		playerRigidbody = GetComponent<Rigidbody2D>();
-		playerTransform = GetComponent<Transform>();
+		heroRigidbody = GetComponent<Rigidbody2D>();
+		heroTransform = GetComponent<Transform>();
 	}
 	
 	// Update is called once per frame
 	void Update () {
 		float h = Input.GetAxisRaw("Horizontal");
-		Move (h);
+		if(mayMove){
+			Move (h);
+		}
 
 		if(!isJumping && Input.GetKeyDown(KeyCode.Space) && !inWater){
-			playerRigidbody.velocity = new Vector2(0f, 30f);
+			heroRigidbody.velocity = new Vector2(0f, 30f);
 			isJumping = true;
 		}
 
@@ -42,18 +45,18 @@ public class HeroMovement : MonoBehaviour {
 	//Movements
 	
 	void Move(float h){
-		playerRigidbody.velocity = new Vector2(h * speed,playerRigidbody.velocity.y);
+		heroRigidbody.velocity = new Vector2(h * speed,heroRigidbody.velocity.y);
 		if(holdingKey){
-			key.transform.position = new Vector3(playerTransform.position.x, playerTransform.position.y + 3, playerTransform.position.z);
+			key.transform.position = new Vector3(heroTransform.position.x, heroTransform.position.y + 3, heroTransform.position.z);
 		}
 	}
 
 	void ClimbStairs(float v){
-		playerRigidbody.velocity = new Vector2(playerRigidbody.velocity.x, v*0.5f*speed);
+		heroRigidbody.velocity = new Vector2(heroRigidbody.velocity.x, v*0.5f*speed);
 	}
 
 	void Dive(float v){
-		playerRigidbody.velocity = new Vector2(playerRigidbody.velocity.x, v*speed);
+		heroRigidbody.velocity = new Vector2(heroRigidbody.velocity.x, v*speed);
 	}
 
 
@@ -63,6 +66,9 @@ public class HeroMovement : MonoBehaviour {
 	void OnCollisionEnter2D(Collision2D col){
 		if (col.gameObject.CompareTag("Ground")){
 			isJumping = false;
+		}
+		if(col.GetType() == typeof(EdgeCollider2D)){
+			mayMove = false;
 		}
 	}
 
@@ -79,7 +85,7 @@ public class HeroMovement : MonoBehaviour {
 		}
 
 		if(col.gameObject.CompareTag("Water")){
-			playerRigidbody.velocity = new Vector2(0f, playerRigidbody.velocity.y*2f);
+			heroRigidbody.velocity = new Vector2(0f, heroRigidbody.velocity.y*2f);
 		}
 
 		if (col.gameObject.CompareTag("Key")){
@@ -90,7 +96,7 @@ public class HeroMovement : MonoBehaviour {
 
 	void OnTriggerStay2D(Collider2D col){
 		if(col.gameObject.CompareTag("Water")){
-			playerRigidbody.drag = 10f;
+			heroRigidbody.drag = 10f;
 			isJumping = true;
 			inWater = true;
 		}
@@ -102,7 +108,7 @@ public class HeroMovement : MonoBehaviour {
 		}
 
 		if(col.gameObject.CompareTag("Water")){
-			playerRigidbody.drag = 0f;
+			heroRigidbody.drag = 0f;
 			isJumping = false;
 			inWater = false;
 		}
