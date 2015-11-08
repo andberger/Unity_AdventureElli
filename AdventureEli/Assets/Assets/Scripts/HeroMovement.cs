@@ -8,9 +8,11 @@ public class HeroMovement : MonoBehaviour {
 	public bool climbStairs = false;
 	public bool inWater = false;
 	public bool holdingKey = false;
+	public bool holdingFlippers = false;
 	public bool mayMove = true;
 
 	public GameObject key;
+	public GameObject Flippers;
 	private Rigidbody2D heroRigidbody;
 	private Transform heroTransform;
 
@@ -49,6 +51,10 @@ public class HeroMovement : MonoBehaviour {
 		if(holdingKey){
 			key.transform.position = new Vector3(heroTransform.position.x, heroTransform.position.y + 3, heroTransform.position.z);
 		}
+		if(holdingFlippers){
+			key.SetActive(false);
+			Flippers.transform.position = new Vector3(heroTransform.position.x, heroTransform.position.y + 3, heroTransform.position.z);
+		}
 	}
 
 	void ClimbStairs(float v){
@@ -67,9 +73,11 @@ public class HeroMovement : MonoBehaviour {
 		if (col.gameObject.CompareTag("Ground")){
 			isJumping = false;
 		}
-		if(col.GetType() == typeof(EdgeCollider2D)){
-			mayMove = false;
+
+		if(col.gameObject.CompareTag("Blockage") && holdingKey){
+			col.gameObject.SetActive(false);
 		}
+
 	}
 
 
@@ -91,7 +99,9 @@ public class HeroMovement : MonoBehaviour {
 		if (col.gameObject.CompareTag("Key")){
 			holdingKey = true;
 		}
-
+		if (col.gameObject.CompareTag("Flippers")){
+			holdingFlippers = true;
+		}
 	}
 
 	void OnTriggerStay2D(Collider2D col){
