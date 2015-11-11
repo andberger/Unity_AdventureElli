@@ -34,10 +34,9 @@ public class HeroHealth : MonoBehaviour {
 		}
 	}
 
-	void Die(){
+	public void Die(){
 		isDead = true;
 		numLifes = numLifes - 1;
-		faded.a = 0f;
 		if(numLifes == 2){
 			heart3.color = faded;
 			StartCoroutine(gameManager.RestartLevel());

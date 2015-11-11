@@ -13,6 +13,7 @@ public class HeroMovement : MonoBehaviour {
 	
 	public GameObject key;
 	public GameObject Flippers;
+	public HeroHealth health;
 	private Rigidbody2D heroRigidbody;
 	private Transform heroTransform;
 
@@ -107,9 +108,14 @@ public class HeroMovement : MonoBehaviour {
 
 	void OnTriggerStay2D(Collider2D col){
 		if(col.gameObject.CompareTag("Water")){
-			heroRigidbody.drag = 10f;
-			isJumping = true;
-			inWater = true;
+			if(holdingFlippers){
+				heroRigidbody.drag = 10f;
+				isJumping = true;
+				inWater = true;
+			}
+			else{
+				health.Die();
+			}
 		}
 	}
 
