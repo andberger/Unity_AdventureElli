@@ -1,18 +1,22 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 
 public class Score : MonoBehaviour {
 
-	public float score;
-	public GUIStyle guistyle;
-	// Use this for initialization
-	void Start () {
+	public static float score;
+	Text text;
 
+	// Use this for initialization
+	void Awake () {
+		text = GetComponent <Text> ();
+		score = 0;
 	}
 	
 	// Update is called once per frame
 	void Update () {
 		score += score * Timer.counter;
+		text.text = "Game Over\nScore:"+ (int)Timer.counter;
 		print ("Score:" + (int)Timer.counter);
 	}
 
@@ -20,7 +24,5 @@ public class Score : MonoBehaviour {
 		return (int)timer * 32;
 	}
 
-	void OnGUI(){
-		GUI.Label(new Rect(350,24,100,100),"Time:" + getScore(Timer.counter),guistyle);
-	}
+
 }
