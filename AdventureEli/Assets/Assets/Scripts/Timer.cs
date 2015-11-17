@@ -2,7 +2,7 @@
 using System.Collections;
 
 public class Timer : MonoBehaviour {
-	float counter;
+	public static float counter;
 	public GUIStyle timerStyle;
 	
 	// Use this for initialization
@@ -12,8 +12,6 @@ public class Timer : MonoBehaviour {
 	
 	void Awake(){
 		counter = 0f;
-		//	text = GetComponent <Timer> ();
-		
 	}
 	
 	// Update is called once per frame
