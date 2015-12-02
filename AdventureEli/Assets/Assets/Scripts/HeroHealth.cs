@@ -39,7 +39,7 @@ public class HeroHealth : MonoBehaviour {
 		numLifes = numLifes - 1;
 		if(numLifes == 2){
 			heart3.color = faded;
-			StartCoroutine(gameManager.GameOver());
+			StartCoroutine(gameManager.RestartLevel ());
 		}
 		if(numLifes == 1){
 			heart2.color = faded;

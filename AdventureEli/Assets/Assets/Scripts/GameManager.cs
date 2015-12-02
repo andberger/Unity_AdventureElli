@@ -41,10 +41,10 @@ public class GameManager : MonoBehaviour {
 		c.a = 1f;
 		gOverImage.color = c;
 		gameOverText.SetActive(true);
-		int score = Score.getScore (Timer.counter);
+		Score.getScore (Timer.counter);
 		//Score s = new Score ();
 
-		print ("Score:" + score);
+		
 	}
 
 	void RestoreObjects(){
