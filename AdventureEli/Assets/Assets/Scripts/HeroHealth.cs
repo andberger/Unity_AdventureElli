@@ -15,12 +15,12 @@ public class HeroHealth : MonoBehaviour {
 	public Image heart3;
 
 	private Rigidbody2D heroRigidbody;
-	private BoxCollider2D heroBoxCollider;
+	private PolygonCollider2D heroPolyCollider;
 
 	// Use this for initialization
 	void Start () {
 		heroRigidbody = GetComponent<Rigidbody2D>();
-		heroBoxCollider = GetComponent<BoxCollider2D>();
+		heroPolyCollider = GetComponent<PolygonCollider2D>();
 	}
 	
 	// Update is called once per frame
@@ -29,7 +29,14 @@ public class HeroHealth : MonoBehaviour {
 		if(isDead){
 			heroMovement.mayMove = false;
 			heroRigidbody.velocity = new Vector2(-12.5f, 20f);
-			heroBoxCollider.enabled = !heroBoxCollider.enabled;
+			heroPolyCollider.enabled = !heroPolyCollider.enabled;
+			heroMovement.holdingKey = false;
+			heroMovement.holdingFlippers = false;
+			heroMovement.holdingIceaxes = false;
+			heroMovement.Flippers.SetActive(true);
+			heroMovement.Iceaxes.SetActive(true);
+			heroMovement.Blockage.SetActive(true);
+			heroMovement.key.SetActive(true);
 			isDead = false;
 		}
 	}
@@ -47,13 +54,25 @@ public class HeroHealth : MonoBehaviour {
 		}
 		if(numLifes == 0){
 			heart1.color = faded;
+			StartCoroutine(gameManager.RestartLevel());
+			gameManager.BackToMainMenu();
+			heroMovement.mayMove = false;
 		}
 
 	}
 
 	void OnCollisionEnter2D(Collision2D col){
-		if(col.gameObject.CompareTag("Enemy") && col.collider.GetType().Equals(typeof(BoxCollider2D)) && !isDead){
+		if(col.gameObject.CompareTag("Enemy") && col.collider.GetType().Equals(typeof(PolygonCollider2D)) && !isDead){
 			Die();
+		}
+		if(col.gameObject.CompareTag("Spikes")){
+			Die ();
+		}
+	}
+
+	void OnTriggerEnter2D(Collider2D col){
+		if(col.gameObject.CompareTag("OutOfMap")){
+			Die ();
 		}
 	}
 

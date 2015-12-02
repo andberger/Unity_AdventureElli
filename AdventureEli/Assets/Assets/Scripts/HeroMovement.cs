@@ -9,11 +9,16 @@ public class HeroMovement : MonoBehaviour {
 	public bool inWater = false;
 	public bool holdingKey = false;
 	public bool holdingFlippers = false;
+	public bool holdingIceaxes = false;
+	public bool atIceWall = false;
 	public bool mayMove = true;
 	
 	public GameObject key;
 	public GameObject Flippers;
+	public GameObject Iceaxes;
+	public GameObject Blockage;
 	public HeroHealth health;
+	public GameManager gameManager;
 	private Rigidbody2D heroRigidbody;
 	private Transform heroTransform;
 
@@ -27,22 +32,29 @@ public class HeroMovement : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+
 		//Move
 		float h = Input.GetAxisRaw("Horizontal");
 		if(mayMove){
 			Move (h);
 		}
+
 		//Jump
-		if(!isJumping && Input.GetKeyDown(KeyCode.Space) && !inWater && mayMove){
+		if(!isJumping && Input.GetKeyDown(KeyCode.Space) && !inWater && mayMove && !atIceWall){
 			heroRigidbody.velocity = new Vector2(0f, 30f);
 			isJumping = true;
 		}
 
-		//Climb and swim
+		//Climb stairs and swim
 		float v = Input.GetAxisRaw("Vertical");
 		if(climbStairs || inWater){
 			ClimbStairs(v);
 			Dive(v);
+		}
+
+		//Iceclimb
+		if(holdingIceaxes && atIceWall){
+			IceClimb(v);
 		}
 	}
 
@@ -55,8 +67,10 @@ public class HeroMovement : MonoBehaviour {
 			key.transform.position = new Vector3(heroTransform.position.x, heroTransform.position.y + 3, heroTransform.position.z);
 		}
 		if(holdingFlippers){
-			key.SetActive(false);
-			Flippers.transform.position = new Vector3(heroTransform.position.x, heroTransform.position.y + 3, heroTransform.position.z);
+			Flippers.SetActive(false);
+		}
+		if(holdingIceaxes){
+			Iceaxes.SetActive(false);
 		}
 	}
 
@@ -66,6 +80,10 @@ public class HeroMovement : MonoBehaviour {
 
 	void Dive(float v){
 		heroRigidbody.velocity = new Vector2(heroRigidbody.velocity.x, v*speed);
+	}
+
+	void IceClimb(float v){
+		heroRigidbody.velocity = new Vector2(heroRigidbody.velocity.x, v*0.5f*speed);
 	}
 
 
@@ -79,6 +97,7 @@ public class HeroMovement : MonoBehaviour {
 
 		if(col.gameObject.CompareTag("Blockage") && holdingKey){
 			col.gameObject.SetActive(false);
+			key.SetActive(false);
 		}
 	}
 
@@ -93,6 +112,9 @@ public class HeroMovement : MonoBehaviour {
 		if(col.gameObject.CompareTag("Stairs")){
 			climbStairs = true;
 		}
+		if(col.gameObject.CompareTag("atIceWall")){
+			atIceWall = true;
+		}
 
 		if(col.gameObject.CompareTag("Water")){
 			heroRigidbody.velocity = new Vector2(0f, heroRigidbody.velocity.y*2f);
@@ -103,6 +125,13 @@ public class HeroMovement : MonoBehaviour {
 		}
 		if (col.gameObject.CompareTag("Flippers")){
 			holdingFlippers = true;
+		}
+		if (col.gameObject.CompareTag("Iceaxes")){
+			holdingIceaxes = true;
+		}
+		if(col.gameObject.CompareTag("Door")){
+			gameManager.WinGame();
+			mayMove = false;
 		}
 	}
 
@@ -122,6 +151,9 @@ public class HeroMovement : MonoBehaviour {
 	void OnTriggerExit2D(Collider2D col){
 		if(col.gameObject.CompareTag("Stairs")){
 			climbStairs = false;
+		}
+		if(col.gameObject.CompareTag("atIceWall")){
+			atIceWall = false;
 		}
 
 		if(col.gameObject.CompareTag("Water")){

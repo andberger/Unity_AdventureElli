@@ -6,11 +6,12 @@ public class EnemyLogic : MonoBehaviour {
 	public bool isEnemyDead = false;
 	public bool enemyMayMove = true;
 	public GameObject enemyGameObject;
+	public GameManager gameManager;
 
 	private float movement;
 	private EdgeCollider2D edge;
 	private Rigidbody2D enemyRigidbody;
-	private BoxCollider2D enemyBoxCollider;
+	private PolygonCollider2D enemyPolyCollider;
 
 	
 	// Use this for initialization
@@ -18,7 +19,7 @@ public class EnemyLogic : MonoBehaviour {
 		movement = 10f;
 		enemyRigidbody = GetComponent<Rigidbody2D>();
 		edge = GetComponent<EdgeCollider2D>();
-		enemyBoxCollider = GetComponent<BoxCollider2D>();
+		enemyPolyCollider = GetComponent<PolygonCollider2D>();
 	}
 	
 	// Update is called once per frame
@@ -29,9 +30,11 @@ public class EnemyLogic : MonoBehaviour {
 		if(isEnemyDead){
 			enemyMayMove = false;
 			enemyRigidbody.velocity = new Vector2(12.5f, 20f);
-			enemyBoxCollider.enabled = !enemyBoxCollider.enabled;
+			enemyPolyCollider.enabled = !enemyPolyCollider.enabled;
 			edge.enabled = !edge.enabled;
+			StartCoroutine(enemyDeactivate());
 			isEnemyDead = false;
+			enemyMayMove = true;
 		}
 	}
 
@@ -42,7 +45,12 @@ public class EnemyLogic : MonoBehaviour {
 
 	void enemyDie(){
 		isEnemyDead = true;
-		Destroy(enemyGameObject,3f);
+	}
+
+	public IEnumerator enemyDeactivate(){
+		yield return new WaitForSeconds(2.5f);
+		gameManager.reset.ResetEnemyPosition();
+		enemyGameObject.SetActive(false);
 	}
 
 
