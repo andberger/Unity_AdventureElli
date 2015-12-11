@@ -63,6 +63,12 @@ public class HeroMovement : MonoBehaviour {
 	
 	void Move(float h){
 		heroRigidbody.velocity = new Vector2(h * speed,heroRigidbody.velocity.y);
+		if(h == 1f){
+			heroTransform.eulerAngles = new Vector2(0, 180);
+		}
+		if(h == -1f){
+			heroTransform.eulerAngles = new Vector2(0, 0);
+		}
 		if(holdingKey){
 			key.transform.position = new Vector3(heroTransform.position.x, heroTransform.position.y + 3, heroTransform.position.z);
 		}

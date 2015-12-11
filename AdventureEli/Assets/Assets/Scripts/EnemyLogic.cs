@@ -41,6 +41,12 @@ public class EnemyLogic : MonoBehaviour {
 	//Logic
 	void Move(){
 		enemyRigidbody.velocity = new Vector2(movement,enemyRigidbody.velocity.y);
+		if(movement > 0f){
+			enemyGameObject.transform.eulerAngles = new Vector2(0, 0);
+		}
+		if(movement < 0f){
+			enemyGameObject.transform.eulerAngles = new Vector2(0, 180);
+		}
 	}
 
 	void enemyDie(){
