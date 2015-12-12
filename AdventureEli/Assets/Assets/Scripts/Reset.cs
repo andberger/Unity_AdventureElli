@@ -3,6 +3,7 @@ using System.Collections;
 
 public class Reset : MonoBehaviour {
 	private Vector3 origPosition;
+	private Quaternion origRotation;
 	private Vector3 origKeyPosition;
 	private Vector3 origEOnePosition;
 	private Vector3 origETwoPosition;
@@ -27,6 +28,7 @@ public class Reset : MonoBehaviour {
 		rigidbody = GetComponent<Rigidbody2D>();
 		polyCollider = GetComponent<PolygonCollider2D>();
 		origPosition = transform.position;
+		origRotation = transform.rotation;
 		origVelocity = rigidbody.velocity;
 		origPolyColliderStatus = polyCollider.enabled;
 		origMayMove = heroMovement.mayMove;
@@ -38,6 +40,7 @@ public class Reset : MonoBehaviour {
 	
 	public void ResetHeroPosition(){
 		transform.position = origPosition;
+		transform.rotation = origRotation;
 		rigidbody.velocity = origVelocity;
 		polyCollider.enabled = origPolyColliderStatus;
 		if(heroHealth.numLifes == 0){

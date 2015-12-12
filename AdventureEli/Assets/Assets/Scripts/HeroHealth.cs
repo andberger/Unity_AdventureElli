@@ -42,6 +42,7 @@ public class HeroHealth : MonoBehaviour {
 	}
 
 	public void Die(){
+		transform.eulerAngles = new Vector3(0, transform.rotation.y, 270);
 		isDead = true;
 		numLifes = numLifes - 1;
 		if(numLifes == 2){
